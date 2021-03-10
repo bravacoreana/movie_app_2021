@@ -104,7 +104,7 @@ function App() {
 function Food({ name, image }) {
   return (
     <div>
-      <h1>I Love {name}</h1>
+      <h1>i Love {name}</h1>
       <img src={image} alt={name} />
     </div>
   );
@@ -125,7 +125,7 @@ function App() {
 ```
 
 그런데 콘솔창을 보면 이런 에러를 만날 수 있다.
-![](warning.png)
+![](src/2-3-0324-warning.png)
 
 이 말은 모든 리액트의 element들은 유일해야 하는데 리스트에 들어가면 uniqueness 를 잃어버림 👉🏼 리스트 내부의 요소들에게 id를 주자!
 
@@ -250,3 +250,78 @@ function App() {
 
 `Food.propTypes` 에서 우리가 Food 컴포넌트에서 쓸 프로퍼티들을 지정해주고, 그 프로퍼티들의 타입들과 필수 여부 등을 작성해주면 프로퍼티의 유무 뿐 아니라 타입까지 확인할 수 있다 :) 예를 들어 `rating: PropTypes.string.isRequired` 라고 한다면, 에러를 만날 수 있다. ∵ 우리가 보내주는 데이터에 rating은 타입이 number 이기 때문!
 `ComponentName.propTypes = { property: condition}`
+
+## 전체코드
+
+```JSX
+import PropTypes from "prop-types";
+
+const foodILike = [
+  {
+    id: 1,
+    name: "KFC",
+    image:
+      "https://cdn.shortpixel.ai/client/q_glossy,ret_img,w_656/https://www.milanoevents.it/wp-content/uploads/2016/08/Kfc-milano.jpg",
+    rating: 4,
+  },
+  {
+    id: 2,
+    name: "Popeyes",
+    image:
+      "https://www.gannett-cdn.com/presto/2018/08/08/PHGL/8a55dc95-fb75-4711-8fde-8ea221478845-Popeyesjpg.jpg?crop=729,412,x0,y70&width=2560",
+    rating: 3.8,
+  },
+  {
+    id: 3,
+    name: "Yamyam chicken",
+    image:
+      "https://jesspryles.com/wp-content/uploads/2018/01/korean-fried-chicken-24.jpg",
+    rating: 4.9,
+  },
+];
+
+Food.propTypes = {
+  // PropTypes 가 아님에 유의!
+  name: PropTypes.string.isRequired,
+  image: PropTypes.string.isRequired,
+  rating: PropTypes.number.isRequired,
+};
+
+function Food({ name, image, rating }) {
+  return (
+    <div>
+      <h2>I Love {name}</h2>
+      <h4>Rating: {rating}/5</h4>
+      <img src={image} alt={name} width="320px" height="180px" />
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <div>
+      {foodILike.map((plate) => (
+        <Food
+          key={plate.id}
+          name={plate.name}
+          image={plate.image}
+          rating={plate.rating}
+        />
+      ))}
+    </div>
+  );
+}
+
+export default App;
+```
+
+---
+
+[목록으로](../../README.md) / [이전으로](../chapter-01/README.md) / [다음으로](../chapter-03/README.md)
+
+1. [SETUP](../chapter-01/README.md)
+2. [JSX & PROPS](../chapter-02/README.md)
+3. [STATE](../chapter-03/README.md)
+4. [MAKING THE MOVIE APP](../chapter-04/README.md)
+5. [CONCLUSIONS](../chapter-05/README.md)
+6. [ROUTING BONUS](../chapter-06/README.md)
