@@ -1,7 +1,7 @@
 #### 3.0 Class Components and State
 
 state는 보통 우리가 동적 데이터와 함께 작업할 때 만들어진다. <br/>
-동적 데이터(dynamic data)란? 변하지 않는 데이터, 존재하지 않는 데이터, 생겨나고 사라지거나 변경된 데이터, 1인 데이터, 그리고 2가 되고 또는 0이 되는 데이터들.<br/>
+동적 데이터(dynamic data)란? 변하는 데이터, 존재하지 않는 데이터, 생겨나고 사라지거나 변경된 데이터, 1인 데이터, 그리고 2가 되고 또는 0이 되는 데이터들.<br/>
 For this, props are not gonna help us. What we need is `state`.<br/>
 우리가 지금까지 작성해 사용한 Food 컴포넌트, 리스트로는 state를 쓸 수 없다. 왜냐면 우리가 작성했던 건 정적인 데이터니까!
 
@@ -135,6 +135,109 @@ class App extends React.Component {
 
 > 매 순간 setState를 호출할 때 마다 리액트는 새로운 state와 함께 render function 을 새로 호출한다!<br/>
 > Everytime I call setState, React is going to call the render function with the new state!
+
+#### 3.2 Component Life Cycle
+
+리액트 컴포넌트에서 우리가 실제로 사용하는 render 함수가 유일하다. plus 함수와 minus 함수는 우리가 만든거니까! 하지만 리액트 클라스 컴포넌트는 단순히 render 말고 더 많은 걸 가지고 있다. 이들은 life cycle method 를 가지는데, 이는 기본적으로 리액트 컴포넌트를 생성하거나 소멸시키는 방법이다. 컴포넌트가 생성 될 때 render 되기 **전**에 호출되는 몇가지 함수가 있다. 그리고 컴포넌트가 render 된 **후** 호출되는 다른 함수들도 있다. 예를 들어 plus 버튼을 클릭해 +1, +1, +1 을 만들 때 호출되는 함수가 있고, 또 컴포넌트가 업데이트 될 때 호출되는 다른 함수도 있다는 것이다.
+
+컴포넌트가 하는 3가지 일
+
+1. mounting: mounting은 다시 태어나는 것, 즉 컴포넌트가 생성되는 것
+
+   - 컴포넌트가 생성될 때 불리는 methods
+     1. **constructor()** : 리액트에서 온 것이 아님. JS에서 클라스를 만들 때 호출됨
+     2. static getDerivedStateFromProps()
+     3. **render()**
+     4. **componentDidmount()**
+
+   이 순서대로 각각의 함수가 호출된다!
+
+2. updating: 나로 인해서 업데이트 될 때 (plus/minus 를 클릭해 state를 변경할 때)
+   - 컴포넌트가 업데이트 될 때 불리는 methods
+     1. static getDerivedStateFromProps()
+     2. shouldComponentUpdate()
+     3. **render()**
+     4. getSnapshotBeforeUpdate()
+     5. **componentDidUpate()** : setState를 호출하면 컴포넌트를 호출하고 render를 호출한 다음 업데이트가 완료되면 componentDidUpdate가 실행됨.
+3. unmounting: 컴포넌트가 소멸되는 것. 👉🏼 언제? 페이지를 바꿀 때 컴포넌트가 죽겠지! 아니면 state를 이용해서 컴포넌트를 교체하거나!
+   - 컴포넌트가 소멸될 때 분리는 methods
+     1. **componentWillUnmount()**
+
+```JSX
+import React from "react";
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    console.log("constructor: hello!");
+  }
+  state = {
+    count: 0,
+  };
+  plus = () => {
+    this.setState((current) => ({ count: current.count + 1 }));
+  };
+  minus = () => {
+    this.setState((current) => ({ count: current.count - 1 }));
+  };
+  componentDidMount() {
+    console.log("componentDidMount: component rendered");
+  }
+  componentDidUpdate() {
+    console.log("componentDidUpdate: component has been updated!");
+  }
+  render() {
+    console.log("rendering");
+    return (
+      <div>
+        <h1>The number is: {this.state.count}</h1>
+        <button onClick={this.plus}>PLUS</button>
+        <button onClick={this.minus}>MINUS</button>
+      </div>
+    );
+  }
+}
+
+export default App;
+```
+
+![](src/simulation.png)
+
+#### 3.3 Planning the Movie Component
+
+이제 movie 컴포넌트를 구성해볼 시간!<br/>
+
+**🐳 큰 그림을 그려봅시다 🐳**
+
+```JSX
+import React from "react";
+
+class App extends React.Component {
+  state = {
+    isLoading: true, // 마운트 되자마자 isLoading은 당연히 true가 된다
+  };
+  componentDidMount() {
+    // 컴포넌트 렌더링이 끝나자마자 호출된다
+    setTimeout(() => {
+      this.setState({ isLoading: false });
+    }, 5000);
+  }
+  render() {
+    const { isLoading } = this.state; // ES6 magic
+    return <div>{isLoading ? "Loading" : "We are ready"}</div>;
+  }
+}
+
+export default App;
+```
+
+로딩중일 때(isLoading이 true인 동안) 영화 데이터를 fetch 하고, fetch가 다 되면(componentdidMount()가 호출될 때) 불러온 데이터를 보여주면 된다!!
+
+여기서 추가로, state에 초기 지정 없이 내가 원하는 setState에 값을 추가해줘도 된다. 예를 들어<br/>
+
+```JSX
+setState({ isLoading: true, book: true ...})  // book의 값을 state에 지정하지 않아도 괜찮음
+```
 
 ---
 

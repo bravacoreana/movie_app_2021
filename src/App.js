@@ -4,25 +4,19 @@ import React from "react";
 
 class App extends React.Component {
   state = {
-    count: 0,
+    isLoading: true, // 마운트 되자마자 isLoading은 당연히 true가 된다
+    movies: [],
   };
-  plus = () => {
-    this.setState((current) => ({ count: current.count + 1 }));
-  };
-  minus = () => {
-    this.setState((current) => ({ count: current.count - 1 }));
-  };
+  componentDidMount() {
+    // 컴포넌트 렌더링이 끝나자마자 호출된다
+    setTimeout(() => {
+      this.setState({ isLoading: false });
+    }, 6000);
+  }
   render() {
-    return (
-      <div>
-        <h1>The number is: {this.state.count}</h1>
-        <button onClick={this.plus}>PLUS</button>
-        <button onClick={this.minus}>MINUS</button>
-      </div>
-    );
+    const { isLoading } = this.state;
+    return <div>{isLoading ? "Loading" : "We are ready"}</div>;
   }
 }
 
 export default App;
-
-// 이제 class App 이 리액트 컴포넌트다
