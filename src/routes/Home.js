@@ -2,10 +2,10 @@
 
 import React from "react";
 import axios from "axios";
-import Movie from "./Movie";
-import "./App.css";
+import Movie from "../components/Movie";
+import "./Home.css";
 
-class App extends React.Component {
+class Home extends React.Component {
   state = {
     isLoading: true, // 마운트 되자마자 isLoading은 당연히 true가 된다
     movies: [],
@@ -32,13 +32,13 @@ class App extends React.Component {
   render() {
     const { isLoading, movies } = this.state;
     return (
-      <section class="container">
+      <section className="container">
         {isLoading ? (
-          <div class="loader">
-            <span class="loader__text">Loading...</span>
+          <div className="loader">
+            <span className="loader__text">Loading...</span>
           </div>
         ) : (
-          <div class="movies">
+          <div className="movies">
             {movies.map((movie) => (
               <Movie
                 key={movie.id}
@@ -57,7 +57,7 @@ class App extends React.Component {
   }
 }
 
-export default App;
+export default Home;
 
 // axios.get 이 느릴 수도 있음!
 // 따라서 우리는 JS에게 componentDidMount 함수가 끝날 때까지 시간이 걸릴수도 있다고 말해줘야 한다
