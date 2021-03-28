@@ -3,7 +3,7 @@
 React JS Fundamentals Course (2019)
 https://nomadcoders.co/
 
-| Chapter | Start Date  | Finish Date |                    Link                     |
+| Chapter | Start Date  | Finish Date |                   Course Notes|
 | :-----: | :---------: | :---------: | :-----------------------------------------: |
 |    1    | 09.Mar.2021 | 09.Mar.2021 | [🔗 LINK](course-note/chapter-01/README.md) |
 |    2    | 10.Mar.2021 | 10.Mar.2021 | [🔗 LINK](course-note/chapter-02/README.md) |
